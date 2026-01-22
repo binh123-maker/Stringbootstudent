@@ -46,7 +46,7 @@ public class StudentViewController {
         return "form";
     }
 
-    // 🔹 SAVE (ADD + EDIT)
+    // 🔹 SAVE (    + EDIT)
     @PostMapping("/save")
     public String save(@ModelAttribute Student student) {
         service.addStudent(student);
