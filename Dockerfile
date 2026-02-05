@@ -1,6 +1,5 @@
 # Bước 1: Build ứng dụng
-FROM maven:3.8.5-openjdk-17 AS build
-# Chép mọi thứ vào
+FROM maven:3.8.5-openjdk-21 AS build
 # Sửa dòng này trong Dockerfile nếu pom.xml nằm trong lab3
 COPY . .
 RUN cd lab3 && ./mvnw clean package -DskipTests
