@@ -1,15 +1,16 @@
 # Bước 1: Build ứng dụng
-FROM maven:3.8.5-openjdk-21 AS build
-# Sửa dòng này trong Dockerfile nếu pom.xml nằm trong lab3
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /app
+# Chép toàn bộ thư mục vào container
 COPY . .
-RUN cd lab3 && ./mvnw clean package -DskipTests
-# Di chuyển vào thư mục lab3 để build
-WORKDIR /lab3
-RUN mvn clean package -DskipTests
+# Chạy build trực tiếp với file pom.xml nằm trong thư mục lab3
+RUN mvn -f lab3/pom.xml clean package -DskipTests
 
 # Bước 2: Chạy ứng dụng
-FROM openjdk:17-jdk-slim
-# Lấy file jar từ trong thư mục lab3/target
-COPY --from=build /lab3/target/*.jar app.jar
+# Thay đổi image sang bản alpine để ổn định và nhẹ hơn
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+# Lấy file jar từ thư mục target của lab3
+COPY --from=build /app/lab3/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
