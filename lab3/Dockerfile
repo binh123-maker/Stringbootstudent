@@ -1,5 +1,10 @@
-FROM eclipse-temurin:21-jdk-alpine
-VOLUME /tmp
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+# Bước 1: Build ứng dụng bằng Maven
+FROM maven:3.8.5-openjdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
+# Bước 2: Chạy ứng dụng bằng JDK nhẹ hơn
+FROM openjdk:17-jdk-slim
+COPY --from=build /target/*.jar app.jar
+EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]
